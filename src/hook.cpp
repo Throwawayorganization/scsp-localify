@@ -934,6 +934,9 @@ namespace
 		const std::wstring gameVer(getGameVersion()->start_char);
 		const std::wstring resVersion(get_CurrentResourceVersion(Global_get_instance())->start_char);
 
+		wprintf(L"Game Version: %ls\n", gameVer.c_str());
+		wprintf(L"Resource Version: %ls\n", resVersion.c_str());
+		
 		const auto atPos = resVersion.find(L'@');
 		const auto simpleVersion = resVersion.substr(0, atPos);
 		const auto encodedInfo = resVersion.substr(atPos + 1);
