@@ -449,6 +449,7 @@ namespace
 	Il2CppReflectionType* Font_Type;
 
 	void* getReplaceFont() {
+		std::wprintf(L"-- START --\n");
 		void* replaceFont{};
 		if (g_custom_font_path.empty()) return replaceFont;
 		const auto& bundleHandle = GetBundleHandleByAssetName(g_custom_font_path);
@@ -485,6 +486,21 @@ namespace
 		{
 			std::wprintf(L"Cannot find asset font\n");
 		}
+
+		
+		static auto getGameVersion = reinterpret_cast<Il2CppString* (*)()>(
+			il2cpp_resolve_icall("UnityEngine.Application::get_version()")
+			);
+		static auto get_CurrentResourceVersion = reinterpret_cast<Il2CppString* (*)(void*)>(
+			il2cpp_symbols::get_method_pointer("PRISM.ResourceManagement.dll", "PRISM",
+				"Global", "get_CurrentResourceVersion", 0)
+			);
+		const std::wstring gameVer(getGameVersion()->start_char);
+		const std::wstring resVersion(get_CurrentResourceVersion(Global_get_instance())->start_char);
+		std::wprintf(L"Game Version : %ls\n", gameVer.c_str());
+		std::wprintf(L"Resource Version : %ls\n", resVersion.c_str());
+
+		std::wprintf(L"-- END --\n");
 		return replaceFont;
 	}
 
@@ -933,9 +949,6 @@ namespace
 
 		const std::wstring gameVer(getGameVersion()->start_char);
 		const std::wstring resVersion(get_CurrentResourceVersion(Global_get_instance())->start_char);
-
-		wprintf(L"Game Version : %ls\n", gameVer.c_str());
-		wprintf(L"Resource Version : %ls\n", resVersion.c_str());
 
 		const auto atPos = resVersion.find(L'@');
 		const auto simpleVersion = resVersion.substr(0, atPos);
